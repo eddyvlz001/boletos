@@ -1,0 +1,147 @@
+{
+  "name": "sistema-contratos",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Sistema de gestión de contratos, órdenes de trabajo y rifas",
+  "author": {
+    "name": "Sistema de Contratos",
+    "email": "info@sistemacontratos.com"
+  },
+  "type": "module",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "build:plugin": "node scripts/build-plugin.js",
+    "build:mac": "electron-builder --mac dmg zip",
+    "build:win": "electron-builder --win portable nsis",
+    "build:all": "npm run build && npm run build:plugin && npm run build:mac && npm run build:win",
+    "deploy": "npm run build && npm run build:plugin && npm run build:mac && npm run build:win"
+  },
+  "dependencies": {
+    "vue": "^3.3.11",
+    "@vueuse/core": "^10.7.0",
+    "vue-router": "^4.2.5",
+    "date-fns": "^3.0.6",
+    "better-sqlite3": "^9.4.3",
+    "electron-store": "^8.1.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.2",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "vue-tsc": "^1.8.25",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0",
+    "@tailwindcss/forms": "^0.5.7",
+    "@types/better-sqlite3": "^7.6.9",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "archiver": "^6.0.1",
+    "fs-extra": "^11.2.0",
+    "ts-node": "^10.9.2",
+    "@types/node": "^20.10.5",
+    "@types/archiver": "^5.3.4",
+    "@types/fs-extra": "^11.0.4"
+  },
+  "build": {
+    "appId": "com.sistemacontratos.app",
+    "productName": "Sistema de Contratos",
+    "asar": true,
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "build",
+        "to": ".",
+        "filter": ["**/*"]
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.business",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "build/icon.icns",
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "artifactName": "SistemaContratos-${version}-${arch}.${ext}"
+    },
+    "dmg": {
+      "background": "build/background.png",
+      "icon": "build/icon.icns",
+      "iconSize": 128,
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "window": {
+        "width": 540,
+        "height": 400
+      },
+      "artifactName": "SistemaContratos-${version}.${ext}"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "publisherName": "Sistema de Contratos"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Sistema de Contratos",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "artifactName": "SistemaContratos-Setup-${version}.exe",
+      "deleteAppDataOnUninstall": false,
+      "include": "build/installer.nsh"
+    },
+    "portable": {
+      "artifactName": "SistemaContratos-Portable-${version}.exe"
+    }
+  }
+}
